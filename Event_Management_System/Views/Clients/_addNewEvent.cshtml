@@ -1,0 +1,10 @@
+﻿@model Event_Management_System.Models.Event
+
+<div class="row mb-2">
+    <div class="col-10">
+        @Html.DropDownListFor(x => x.EventId, ViewBag.events as SelectList, "-----Select-----", htmlAttributes: new { @class = "form-select form-select-sm mb-2", Style = "Background-color: #1a0f29;color:white;border:1px solid #6f42c1" })
+    </div>
+    <div class="col-2">
+        <a href="#" id="btnDelete" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
+    </div>
+</div>

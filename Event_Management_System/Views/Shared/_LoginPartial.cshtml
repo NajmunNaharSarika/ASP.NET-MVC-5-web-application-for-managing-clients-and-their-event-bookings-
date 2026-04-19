@@ -1,0 +1,195 @@
+﻿@using Microsoft.AspNet.Identity
+
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="auth-user-wrap">
+            <div class="auth-avatar">
+                @User.Identity.GetUserName().Substring(0, 1).ToUpper()
+            </div>
+            <div class="auth-info">
+                <span class="auth-greeting">Welcome back</span>
+                <span class="auth-username">@User.Identity.GetUserName()</span>
+            </div>
+            <div class="auth-actions">
+                @Html.ActionLink("Manage", "Index", "Manage",
+                         routeValues: null,
+                         htmlAttributes: new { title = "Manage Account", @class = "auth-btn auth-btn--ghost" })
+                <a class="auth-btn auth-btn--logout"
+                   href="javascript:document.getElementById('logoutForm').submit()">
+                    <i class="fa fa-sign-out"></i>
+                    <span>Log off</span>
+                </a>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="auth-guest-wrap">
+        @Html.ActionLink("Register", "Register", "Account",
+                 routeValues: null,
+                 htmlAttributes: new { id = "registerLink", @class = "auth-btn auth-btn--register" })
+        @Html.ActionLink("Log in", "Login", "Account",
+                 routeValues: null,
+                 htmlAttributes: new { id = "loginLink", @class = "auth-btn auth-btn--login" })
+    </div>
+}
+
+<style>
+    /* ── Auth: Guest ─────────────────────────── */
+    .auth-guest-wrap {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+    }
+
+    /* ── Auth: Logged-in ─────────────────────── */
+    .auth-user-wrap {
+        display: flex;
+        align-items: center;
+        gap: .75rem;
+    }
+
+    .auth-avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--purple-main), var(--magenta));
+        display: grid;
+        place-items: center;
+        font-family: var(--font-head);
+        font-size: .85rem;
+        font-weight: 700;
+        color: #fff;
+        flex-shrink: 0;
+        box-shadow: 0 0 12px rgba(124,58,237,.5);
+    }
+
+    .auth-info {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.2;
+    }
+
+    .auth-greeting {
+        font-size: .62rem;
+        color: var(--text-dim);
+        font-family: var(--font-head);
+        letter-spacing: .08em;
+        text-transform: uppercase;
+    }
+
+    .auth-username {
+        font-size: .78rem;
+        font-weight: 600;
+        font-family: var(--font-head);
+        color: var(--text-white);
+        max-width: 120px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .auth-actions {
+        display: flex;
+        align-items: center;
+        gap: .4rem;
+    }
+
+    /* ── Shared button base ──────────────────── */
+    .auth-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        font-family: var(--font-head);
+        font-size: .78rem;
+        font-weight: 600;
+        text-decoration: none;
+        border-radius: 50px;
+        padding: .4rem .9rem;
+        transition: all .22s var(--ease);
+        white-space: nowrap;
+        cursor: pointer;
+        border: none;
+    }
+
+    /* Register / ghost */
+    .auth-btn--register,
+    .auth-btn--ghost {
+        color: var(--text-muted);
+        background: transparent;
+        border: 1px solid var(--border);
+    }
+
+        .auth-btn--register:hover,
+        .auth-btn--ghost:hover {
+            color: var(--text-white);
+            border-color: rgba(124,58,237,.55);
+            background: rgba(124,58,237,.1);
+        }
+
+    /* Login / primary */
+    .auth-btn--login {
+        color: #fff;
+        background: linear-gradient(135deg, var(--purple-main), var(--magenta));
+        box-shadow: 0 0 18px rgba(124,58,237,.35);
+    }
+
+        .auth-btn--login:hover {
+            opacity: .88;
+            transform: translateY(-1px);
+            box-shadow: 0 0 24px rgba(124,58,237,.5);
+            color: #fff;
+        }
+
+    /* Logout */
+    .auth-btn--logout {
+        color: var(--magenta-light);
+        background: rgba(233,30,140,.08);
+        border: 1px solid rgba(233,30,140,.25);
+    }
+
+        .auth-btn--logout:hover {
+            background: rgba(233,30,140,.18);
+            border-color: var(--magenta);
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
+        .auth-btn--logout .fa {
+            font-size: .75rem;
+        }
+
+    /* ── Mobile adjustments ──────────────────── */
+    @@media (max-width: 900px) {
+        .auth-user-wrap {
+            flex-wrap: wrap;
+            gap: .6rem;
+        }
+
+        .auth-info {
+            flex: 1;
+        }
+
+        .auth-actions {
+            width: 100%;
+        }
+
+        .auth-btn {
+            flex: 1;
+            justify-content: center;
+        }
+
+        .auth-guest-wrap {
+            width: 100%;
+        }
+
+            .auth-guest-wrap .auth-btn {
+                flex: 1;
+                justify-content: center;
+            }
+    }
+</style>

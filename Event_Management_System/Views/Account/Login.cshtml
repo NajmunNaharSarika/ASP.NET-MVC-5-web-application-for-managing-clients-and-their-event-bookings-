@@ -1,0 +1,179 @@
+﻿@using Event_Management_System.Models
+@model LoginViewModel
+@{
+    ViewBag.Title = "Log in";
+}
+
+<style>
+    /* ── Login Specific Styles ─────────────────── */
+    .auth-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - var(--nav-h) - 200px); /* Adjust based on footer/nav */
+        padding: 2rem 1rem;
+    }
+
+    .elite-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 2.5rem;
+        width: 100%;
+        max-width: 500px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+        .elite-card h2 {
+            font-family: var(--font-head);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, var(--purple-main), var(--magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .elite-card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+
+    /* Form Controls */
+    .form-group-elite {
+        margin-bottom: 1.5rem;
+    }
+
+        .form-group-elite label {
+            display: block;
+            font-family: var(--font-head);
+            font-size: 0.85rem;
+            color: var(--text-white);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+    .elite-input {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        background: rgba(13, 9, 25, 0.6);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        color: white;
+        font-size: 0.95rem;
+        transition: all 0.2s var(--ease);
+    }
+
+        .elite-input:focus {
+            outline: none;
+            border-color: var(--purple-main);
+            box-shadow: 0 0 0 4px var(--purple-glow);
+            background: rgba(13, 9, 25, 0.9);
+        }
+
+    /* Checkbox Customization */
+    .checkbox-elite {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        cursor: pointer;
+    }
+
+    /* Primary Action Button */
+    .btn-elite-primary {
+        width: 100%;
+        padding: 0.8rem;
+        background: linear-gradient(135deg, var(--purple-main), var(--magenta));
+        border: none;
+        border-radius: var(--radius-sm);
+        color: white;
+        font-family: var(--font-head);
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s, opacity 0.2s;
+        margin-top: 1rem;
+    }
+
+        .btn-elite-primary:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+            box-shadow: 0 10px 20px rgba(124, 58, 237, 0.3);
+        }
+
+    .auth-footer-links {
+        margin-top: 1.5rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        padding-top: 1.5rem;
+    }
+
+        .auth-footer-links a {
+            color: var(--magenta-light);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+            .auth-footer-links a:hover {
+                text-decoration: underline;
+            }
+
+    .social-section {
+        margin-top: 2rem;
+    }
+</style>
+
+<div class="auth-container">
+    <div class="elite-card">
+        <h2>@ViewBag.Title</h2>
+        <p>Welcome back! Please enter your credentials.</p>
+
+        @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger mb-3", style = "font-size: 0.85rem;" })
+
+            <div class="form-group-elite">
+                @Html.LabelFor(m => m.Email)
+                @Html.TextBoxFor(m => m.Email, new { @class = "elite-input", placeholder = "name@example.com" })
+                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger small" })
+            </div>
+
+            <div class="form-group-elite">
+                @Html.LabelFor(m => m.Password)
+                @Html.PasswordFor(m => m.Password, new { @class = "elite-input", placeholder = "••••••••" })
+                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger small" })
+            </div>
+
+            <div class="row align-items-center">
+                <div class="col-6">
+                    <label class="checkbox-elite">
+                        @Html.CheckBoxFor(m => m.RememberMe)
+                        @Html.LabelFor(m => m.RememberMe)
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-elite-primary">Log In</button>
+
+            <div class="auth-footer-links">
+                <p class="mb-2">New here? @Html.ActionLink("Create an account", "Register")</p>
+            </div>
+        }
+
+        @if (ViewBag.AllowExternalLogins ?? true)
+        {
+            <div class="social-section">
+                @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

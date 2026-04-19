@@ -1,0 +1,729 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title — Elite Moments</title>
+    <link href="~/Content/font-awesome.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* ── Design Tokens ───────────────────────── */
+        :root {
+            --bg-deep: #0a0612;
+            --bg-nav: #0d0919;
+            --purple-main: #7c3aed;
+            --purple-glow: rgba(124,58,237,.25);
+            --magenta: #e91e8c;
+            --magenta-light: #f472b6;
+            --magenta-glow: rgba(233,30,140,.2);
+            --text-white: #ffffff;
+            --text-muted: rgba(255,255,255,.55);
+            --text-dim: rgba(255,255,255,.3);
+            --border: rgba(124,58,237,.25);
+            --nav-h: 74px;
+            --ease: cubic-bezier(.4,0,.2,1);
+            --radius-sm: 6px;
+            --font-head: 'Outfit', sans-serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-deep);
+            color: var(--text-white);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+            body::before {
+                content: '';
+                position: fixed;
+                inset: 0;
+                background: radial-gradient(ellipse 70% 50% at 10% 0%, rgba(124,58,237,.18) 0%, transparent 60%), radial-gradient(ellipse 55% 45% at 90% 100%, rgba(233,30,140,.12) 0%, transparent 55%);
+                pointer-events: none;
+                z-index: 0;
+            }
+
+        /* ═══ NAVBAR ═══════════════════════════════ */
+        .elite-nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            height: var(--nav-h);
+            background: rgba(13,9,25,.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 8px 40px rgba(0,0,0,.5);
+        }
+
+        .nav-inner {
+            max-width: 1320px;
+            margin: 0 auto;
+            height: 100%;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+        }
+
+        /* Brand */
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--purple-main), var(--magenta));
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            font-family: var(--font-head);
+            font-size: 19px;
+            font-weight: 800;
+            color: #fff;
+            box-shadow: 0 0 22px rgba(124,58,237,.55), 0 0 40px rgba(233,30,140,.2);
+            flex-shrink: 0;
+        }
+
+        .brand-text-wrap {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.15;
+        }
+
+        .brand-name {
+            font-family: var(--font-head);
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-white);
+        }
+
+            .brand-name span {
+                background: linear-gradient(90deg, var(--purple-main), var(--magenta));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+
+        .brand-sub {
+            font-size: .6rem;
+            font-weight: 400;
+            color: var(--text-muted);
+            letter-spacing: .2em;
+            text-transform: uppercase;
+        }
+
+        /* ── Nav collapse (desktop: always visible) ── */
+        .nav-collapse {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            justify-content: space-between;
+        }
+
+        /* Links */
+        .nav-links {
+            display: flex;
+            align-items: center;
+            list-style: none;
+            gap: .1rem;
+            margin: 0 auto;
+        }
+
+            .nav-links a {
+                display: flex;
+                padding: .5rem 1.1rem;
+                font-family: var(--font-head);
+                font-size: .83rem;
+                font-weight: 500;
+                letter-spacing: .04em;
+                color: var(--text-muted);
+                text-decoration: none;
+                border-radius: var(--radius-sm);
+                position: relative;
+                transition: color .22s var(--ease), background .22s var(--ease);
+            }
+
+                .nav-links a:hover {
+                    color: var(--text-white);
+                    background: rgba(124,58,237,.12);
+                }
+
+            .nav-links li.active a {
+                color: var(--text-white);
+                background: rgba(124,58,237,.15);
+            }
+
+                .nav-links li.active a::after {
+                    content: '';
+                    position: absolute;
+                    bottom: 2px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: 18px;
+                    height: 2px;
+                    background: linear-gradient(90deg, var(--purple-main), var(--magenta));
+                    border-radius: 2px;
+                }
+
+        /* Auth */
+        .nav-auth {
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            flex-shrink: 0;
+        }
+
+            .nav-auth a {
+                font-family: var(--font-head);
+                font-size: .82rem;
+                font-weight: 500;
+                color: var(--text-muted);
+                text-decoration: none;
+                padding: .44rem .9rem;
+                border-radius: 50px;
+                border: 1px solid transparent;
+                transition: all .22s var(--ease);
+            }
+
+                .nav-auth a:hover {
+                    color: var(--text-white);
+                    border-color: var(--border);
+                }
+
+        /* Hamburger — hidden on desktop */
+        .nav-toggler {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            width: 38px;
+            height: 38px;
+            background: rgba(124,58,237,.1);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+            .nav-toggler span {
+                display: block;
+                width: 18px;
+                height: 1.5px;
+                background: var(--magenta-light);
+                transition: all .28s var(--ease);
+            }
+
+        /* ═══ PAGE BODY ════════════════════════════ */
+        .page-wrapper {
+            position: relative;
+            z-index: 1;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .body-content {
+            flex: 1;
+            padding: 2.5rem 1rem;
+            animation: fadeUp .45s var(--ease) both;
+        }
+
+        @@keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .elite-divider {
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
+            margin: 3.5rem 0 0;
+        }
+
+        /* ═══ FOOTER ═══════════════════════════════ */
+        .elite-footer {
+            position: relative;
+            z-index: 1;
+            background: var(--bg-nav);
+            border-top: 1px solid var(--border);
+            padding: 4rem 2rem 0;
+            overflow: hidden;
+        }
+
+            .elite-footer::before {
+                content: '';
+                position: absolute;
+                top: -100px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 500px;
+                height: 260px;
+                background: radial-gradient(ellipse, rgba(124,58,237,.1) 0%, transparent 70%);
+                pointer-events: none;
+            }
+
+        .footer-grid {
+            max-width: 1320px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.4fr 1fr 1fr 1.3fr;
+            gap: 3rem;
+        }
+
+        .footer-brand-col p {
+            font-size: .82rem;
+            color: var(--text-muted);
+            line-height: 1.75;
+            max-width: 240px;
+            margin: 1rem 0 1.5rem;
+        }
+
+        .footer-socials {
+            display: flex;
+            gap: .55rem;
+        }
+
+            .footer-socials a {
+                width: 34px;
+                height: 34px;
+                border-radius: var(--radius-sm);
+                border: 1px solid var(--border);
+                background: rgba(124,58,237,.08);
+                display: grid;
+                place-items: center;
+                color: var(--text-muted);
+                font-size: .85rem;
+                text-decoration: none;
+                transition: all .22s var(--ease);
+            }
+
+                .footer-socials a:hover {
+                    border-color: var(--magenta);
+                    color: var(--magenta);
+                    background: var(--magenta-glow);
+                    transform: translateY(-2px);
+                }
+
+        .footer-col h4 {
+            font-family: var(--font-head);
+            font-size: .7rem;
+            font-weight: 600;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            color: var(--magenta);
+            margin-bottom: 1.1rem;
+        }
+
+        .footer-col ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: .5rem;
+        }
+
+            .footer-col ul a {
+                font-size: .82rem;
+                color: var(--text-muted);
+                text-decoration: none;
+                transition: color .2s, padding-left .2s;
+                display: block;
+            }
+
+                .footer-col ul a:hover {
+                    color: var(--text-white);
+                    padding-left: 4px;
+                }
+
+        .footer-newsletter h4 {
+            font-family: var(--font-head);
+            font-size: .7rem;
+            font-weight: 600;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            color: var(--magenta);
+            margin-bottom: 1.1rem;
+        }
+
+        .footer-newsletter p {
+            font-size: .82rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            line-height: 1.65;
+        }
+
+        .newsletter-row {
+            display: flex;
+            gap: .5rem;
+            flex-wrap: wrap;
+        }
+
+            .newsletter-row input {
+                flex: 1;
+                min-width: 0;
+                padding: .58rem 1rem;
+                background: rgba(255,255,255,.05);
+                border: 1px solid var(--border);
+                border-radius: 50px;
+                color: var(--text-white);
+                font-size: .8rem;
+                outline: none;
+                transition: border-color .2s;
+            }
+
+                .newsletter-row input::placeholder {
+                    color: var(--text-dim);
+                }
+
+                .newsletter-row input:focus {
+                    border-color: var(--purple-main);
+                }
+
+            .newsletter-row button {
+                padding: .58rem 1.1rem;
+                background: linear-gradient(135deg, var(--purple-main), var(--magenta));
+                color: #fff;
+                border: none;
+                border-radius: 50px;
+                font-size: .78rem;
+                font-weight: 600;
+                font-family: var(--font-head);
+                cursor: pointer;
+                white-space: nowrap;
+                transition: opacity .2s, transform .2s;
+            }
+
+                .newsletter-row button:hover {
+                    opacity: .85;
+                    transform: translateY(-1px);
+                }
+
+        .footer-bottom {
+            max-width: 1320px;
+            margin: 2.5rem auto 0;
+            padding: 1.25rem 0 2rem;
+            border-top: 1px solid rgba(124,58,237,.12);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+            .footer-bottom p {
+                font-size: .75rem;
+                color: var(--text-dim);
+            }
+
+                .footer-bottom p strong {
+                    color: rgba(255,255,255,.6);
+                    font-weight: 500;
+                }
+
+        .footer-badge {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            font-size: .72rem;
+            color: var(--text-dim);
+            font-family: var(--font-head);
+            letter-spacing: .06em;
+        }
+
+            .footer-badge .dot {
+                width: 6px;
+                height: 6px;
+                background: var(--magenta);
+                border-radius: 50%;
+                box-shadow: 0 0 6px var(--magenta);
+                animation: blink 2s infinite;
+            }
+
+        @@keyframes blink {
+            0%, 100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: .3;
+            }
+        }
+
+        /* ═══ RESPONSIVE ═══════════════════════════ */
+        @@media (max-width: 1024px) {
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 2.5rem;
+            }
+        }
+
+        @@media (max-width: 900px) {
+            /* Show hamburger on mobile */
+            .nav-toggler {
+                display: flex;
+            }
+            /* Hide nav by default on mobile; show when .open is toggled */
+            .nav-collapse {
+                display: none;
+                position: absolute;
+                top: var(--nav-h);
+                left: 0;
+                right: 0;
+                background: rgba(13,9,25,.97);
+                backdrop-filter: blur(24px);
+                -webkit-backdrop-filter: blur(24px);
+                border-bottom: 1px solid var(--border);
+                padding: 1.25rem 1.5rem 1.75rem;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+                z-index: 999;
+            }
+
+                .nav-collapse.open {
+                    display: flex;
+                }
+
+            .nav-links {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: .2rem;
+                width: 100%;
+            }
+
+                .nav-links li.active a::after {
+                    display: none;
+                }
+
+            .nav-auth {
+                padding-top: .75rem;
+                border-top: 1px solid var(--border);
+                width: 100%;
+            }
+        }
+
+        @@media (max-width: 600px) {
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .footer-brand-col p {
+                max-width: 100%;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-deep);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(124,58,237,.5);
+            border-radius: 3px;
+        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: var(--purple-main);
+            }
+    </style>
+</head>
+<body>
+
+    <!-- ════ NAVBAR ════ -->
+    <nav class="elite-nav">
+        <div class="nav-inner">
+
+            <a href="@Url.Action("Index","Home",new{area=""})" class="nav-brand">
+                <div class="brand-logo">E</div>
+                <div class="brand-text-wrap">
+                    <span class="brand-name"><span>Elite</span> Moments</span>
+                    <span class="brand-sub">Event Management</span>
+                </div>
+            </a>
+
+            <!-- Hamburger — only visible on mobile -->
+            <button class="nav-toggler" id="navToggler" aria-label="Toggle navigation" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+
+            <!-- Collapsible area: always visible on desktop, toggled on mobile -->
+            <div class="nav-collapse" id="navCollapse">
+                <ul class="nav-links">
+                    <li class="@(ViewContext.RouteData.Values["controller"].ToString() == "Home" ? "active" : "")">
+                        @Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })
+                    </li>
+                    <li class="@(ViewContext.RouteData.Values["controller"].ToString() == "Events" ? "active" : "")">
+                        @Html.ActionLink("Events", "Index", "Events", new { area = "" }, new { @class = "nav-link" })
+                    </li>
+                    <li class="@(ViewContext.RouteData.Values["controller"].ToString() == "Clients" ? "active" : "")">
+                        @Html.ActionLink("Clients", "Index", "Clients", new { area = "" }, new { @class = "nav-link" })
+                    </li>
+                </ul>
+
+                <div class="nav-auth">
+                    @Html.Partial("_LoginPartial")
+                </div>
+            </div>
+
+        </div>
+    </nav>
+
+    <!-- ════ PAGE ════ -->
+    <div class="page-wrapper">
+        <div class="body-content container-fluid">
+            @RenderBody()
+            <hr class="elite-divider" />
+
+            <!-- ════ FOOTER ════ -->
+            <footer class="elite-footer">
+                <div class="footer-grid">
+
+                    <div class="footer-brand-col">
+                        <a href="@Url.Action("Index","Home",new{area=""})" class="nav-brand">
+                            <div class="brand-logo">E</div>
+                            <div class="brand-text-wrap">
+                                <span class="brand-name"><span>Elite</span> Moments</span>
+                                <span class="brand-sub">Event Management</span>
+                            </div>
+                        </a>
+                        <p>Crafting unforgettable experiences — from intimate gatherings to grand celebrations. Your vision, our expertise.</p>
+                        <div class="footer-socials">
+                            <a href="#" title="Facebook"><i class="fa fa-facebook"></i></a>
+                            <a href="#" title="Instagram"><i class="fa fa-instagram"></i></a>
+                            <a href="#" title="Twitter"><i class="fa fa-twitter"></i></a>
+                            <a href="#" title="LinkedIn"><i class="fa fa-linkedin"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="footer-col">
+                        <h4>Quick Links</h4>
+                        <ul>
+                            <li><a href="@Url.Action("Index","Home",new{area=""})">Home</a></li>
+                            <li><a href="@Url.Action("Index","Events",new{area=""})">Events</a></li>
+                            <li><a href="@Url.Action("Index","Clients",new{area=""})">Clients</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-col">
+                        <h4>Services</h4>
+                        <ul>
+                            <li><a href="#">Wedding Event</a></li>
+                            <li><a href="#">Engagement Event</a></li>
+                            <li><a href="#">Birthday Party</a></li>
+                            <li><a href="#">Anniversary Event</a></li>
+                            <li><a href="#">Baby Shower</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-newsletter">
+                        <h4>Stay Updated</h4>
+                        <p>Get latest events &amp; exclusive offers delivered to your inbox.</p>
+                        <div class="newsletter-row">
+                            <input type="email" placeholder="Your email address" />
+                            <button type="button">Subscribe</button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="footer-bottom">
+                    <p>© @DateTime.Now.Year <strong>Najmun Naher</strong> · All Rights Reserved</p>
+                    <div class="footer-badge">
+                        <span class="dot"></span>
+                        Elite Moments · Premium Event Management
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+    <script>
+        /* ── Mobile nav toggle ── */
+        (function () {
+            var t = document.getElementById('navToggler');
+            var c = document.getElementById('navCollapse');
+            if (!t || !c) return;
+
+            t.addEventListener('click', function () {
+                var open = c.classList.toggle('open');
+                t.setAttribute('aria-expanded', open);
+                var s = t.querySelectorAll('span');
+                if (open) {
+                    s[0].style.cssText = 'transform:translateY(6.5px) rotate(45deg)';
+                    s[1].style.opacity = '0';
+                    s[2].style.cssText = 'transform:translateY(-6.5px) rotate(-45deg)';
+                } else {
+                    s.forEach(function (x) { x.style.cssText = ''; });
+                }
+            });
+
+            document.addEventListener('click', function (e) {
+                if (!t.contains(e.target) && !c.contains(e.target)) {
+                    c.classList.remove('open');
+                    t.setAttribute('aria-expanded', false);
+                    t.querySelectorAll('span').forEach(function (x) { x.style.cssText = ''; });
+                }
+            });
+        })();
+
+        /* ── Dynamic event rows ── */
+        $("#btnPlus").on("click", function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: "/Clients/AddNewEvent", type: "GET",
+                success: function (data) { $("#eventContainer").append(data); }
+            });
+        });
+        $(document).on("click", "#btnDelete", function (e) {
+            e.preventDefault();
+            $(this).closest('tr,.event-row,.row').remove();
+        });
+    </script>
+</body>
+</html>

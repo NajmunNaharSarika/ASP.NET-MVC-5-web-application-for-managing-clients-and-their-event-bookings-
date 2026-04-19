@@ -1,0 +1,88 @@
+﻿@model Event_Management_System.Models.View_Model.ClientVM
+@{
+    ViewBag.Title = "Delete";
+}
+
+<div class="row">
+    <div class="col">
+        <h2 class="display-7 alert alert-danger">Are you sure to delete this client?</h2>
+        @using (Html.BeginForm("Delete", "Clients", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <div class="row">
+                <div class="col-6">
+
+                    @Html.HiddenFor(x => x.ClientId)
+                    @Html.HiddenFor(x => x.Picture)
+                    <div class="row mb-2">
+                        @Html.LabelFor(x => x.ClientName, htmlAttributes: new { @class = "col-form-label col-form-label-sm col-2" })
+                        <div class="col-8">
+                            @Html.TextBoxFor(x => x.ClientName, new { @class = "form-control form-control-sm", Style = "Background-color: #1a0f29;color:white;border:1px solid #6f42c1" })
+                        </div>
+                        <div class="col-2">
+                            @Html.ValidationMessageFor(x => x.ClientName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        @Html.LabelFor(x => x.BirthDate, htmlAttributes: new { @class = "col-form-label col-form-label-sm col-2" })
+                        <div class="col-8">
+                            @Html.TextBoxFor(x => x.BirthDate, "{0:yyyy-MM-dd}", new { @class = "form-control form-control-sm", type = "date", Style = "Background-color: #1a0f29;color:white;border:1px solid #6f42c1" })
+                        </div>
+                        <div class="col-2">
+                            @Html.ValidationMessageFor(x => x.BirthDate, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        @Html.LabelFor(x => x.Age, htmlAttributes: new { @class = "col-form-label col-form-label-sm col-2" })
+                        <div class="col-8">
+                            @Html.TextBoxFor(x => x.Age, new { @class = "form-control form-control-sm", Style = "Background-color: #1a0f29;color:white;border:1px solid #6f42c1" })
+                        </div>
+                        <div class="col-2">
+                            @Html.ValidationMessageFor(x => x.Age, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        @Html.LabelFor(x => x.PictureFile, htmlAttributes: new { @class = "col-form-label col-form-label-sm col-2" })
+                        <div class="col-8">
+                            @Html.TextBoxFor(x => x.PictureFile, new { @class = "form-control form-control-sm", type = "file", Style = "Background-color: #1a0f29;color:white;border:1px solid #6f42c1" })
+                            <img src="@Model.Picture" width="32" height="32" style="border-radius:5px;" />
+                        </div>
+                        <div class="col-2">
+                            @Html.ValidationMessageFor(x => x.PictureFile, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        @Html.LabelFor(x => x.MaritalStatus, htmlAttributes: new { @class = "col-form-label col-form-label-sm col-2" })
+                        <div class="col-8">
+                            @Html.CheckBoxFor(x => x.MaritalStatus)
+                        </div>
+                        <div class="col-2">
+                            @Html.ValidationMessageFor(x => x.MaritalStatus, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+
+                        <div class="col-10 offset-2">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <h2 class="display-4">Event List</h2>
+                    <div class="d-flex justify-content-end">
+                        <a class="btn btn-primary btn-sm mb-2" href="#" id="btnPlus"><i class="fa fa-plus"></i></a>
+                    </div>
+                    <div id="eventContainer">
+                        @foreach (var item in Model.EventList)
+                        {
+                            @Html.Action("AddNewEvent", "Clients", new { id = item })
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div id="msg"></div>
+            </div>
+        }
+    </div>
+</div>
+

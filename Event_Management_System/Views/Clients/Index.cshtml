@@ -1,0 +1,490 @@
+﻿@model IEnumerable<Event_Management_System.Models.Client>
+@{
+    ViewBag.Title = "Clients";
+}
+
+<style>
+    /* ── Page Header ─────────────────────────── */
+    .page-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid rgba(124,58,237,.2);
+    }
+
+    .page-header-left .page-label {
+        font-size: .68rem;
+        font-weight: 600;
+        letter-spacing: .2em;
+        text-transform: uppercase;
+        color: var(--magenta);
+        font-family: var(--font-head);
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        margin-bottom: .35rem;
+    }
+
+        .page-header-left .page-label::before {
+            content: '';
+            display: block;
+            width: 20px;
+            height: 1px;
+            background: var(--magenta);
+        }
+
+    .page-header-left h2 {
+        font-family: var(--font-head);
+        font-size: 1.9rem;
+        font-weight: 800;
+        color: var(--text-white);
+        letter-spacing: -.02em;
+        line-height: 1.1;
+    }
+
+        .page-header-left h2 span {
+            background: linear-gradient(135deg, #c4a7ff, var(--magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+    .btn-add {
+        display: inline-flex;
+        align-items: center;
+        gap: .45rem;
+        padding: .6rem 1.3rem;
+        background: linear-gradient(135deg, var(--purple-main), var(--magenta));
+        color: #fff;
+        font-family: var(--font-head);
+        font-size: .82rem;
+        font-weight: 700;
+        border-radius: 50px;
+        text-decoration: none;
+        box-shadow: 0 0 20px rgba(124,58,237,.4);
+        transition: all .25s var(--ease);
+        white-space: nowrap;
+    }
+
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 32px rgba(124,58,237,.6);
+            color: #fff;
+            text-decoration: none;
+        }
+
+    /* ── Empty State ─────────────────────────── */
+    .empty-state {
+        text-align: center;
+        padding: 5rem 2rem;
+        background: rgba(255,255,255,.02);
+        border: 1px dashed rgba(124,58,237,.25);
+        border-radius: 16px;
+    }
+
+    .empty-state-icon {
+        font-size: 2.5rem;
+        opacity: .35;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state p {
+        color: var(--text-muted);
+        font-size: .9rem;
+    }
+
+    /* ── Client Card ─────────────────────────── */
+    .client-card {
+        background: rgba(255,255,255,.025);
+        border: 1px solid rgba(124,58,237,.2);
+        border-radius: 16px;
+        margin-bottom: 1.25rem;
+        overflow: hidden;
+        transition: border-color .25s var(--ease), box-shadow .25s var(--ease);
+    }
+
+        .client-card:hover {
+            border-color: rgba(124,58,237,.45);
+            box-shadow: 0 12px 40px rgba(0,0,0,.35), 0 0 30px rgba(124,58,237,.1);
+        }
+
+    /* Card Header */
+    .client-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+        padding: 1.1rem 1.5rem;
+        background: rgba(124,58,237,.07);
+        border-bottom: 1px solid rgba(124,58,237,.15);
+    }
+
+    .client-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .client-avatar-wrap {
+        position: relative;
+        flex-shrink: 0;
+    }
+
+    .client-avatar {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        object-fit: cover;
+        border: 2px solid rgba(124,58,237,.4);
+        box-shadow: 0 0 14px rgba(124,58,237,.3);
+    }
+
+    .client-avatar-fallback {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, var(--purple-main), var(--magenta));
+        display: grid;
+        place-items: center;
+        font-family: var(--font-head);
+        font-size: 1rem;
+        font-weight: 800;
+        color: #fff;
+        box-shadow: 0 0 14px rgba(124,58,237,.4);
+        flex-shrink: 0;
+    }
+
+    .client-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .5rem .75rem;
+        align-items: center;
+    }
+
+    .client-name {
+        font-family: var(--font-head);
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--text-white);
+        width: 100%;
+    }
+
+    .meta-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+        font-size: .72rem;
+        font-family: var(--font-head);
+        color: var(--text-muted);
+        background: rgba(255,255,255,.05);
+        border: 1px solid rgba(124,58,237,.15);
+        border-radius: 50px;
+        padding: .22rem .7rem;
+    }
+
+        .meta-pill i {
+            font-size: .65rem;
+            color: var(--magenta);
+        }
+
+    /* Action Buttons */
+    .client-actions {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        flex-shrink: 0;
+    }
+
+    .action-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+        font-family: var(--font-head);
+        font-size: .75rem;
+        font-weight: 600;
+        border-radius: 50px;
+        padding: .38rem .9rem;
+        text-decoration: none;
+        transition: all .22s var(--ease);
+        white-space: nowrap;
+        border: 1px solid transparent;
+    }
+
+    .action-btn--edit {
+        color: #6ee7b7;
+        background: rgba(110,231,183,.08);
+        border-color: rgba(110,231,183,.2);
+    }
+
+        .action-btn--edit:hover {
+            background: rgba(110,231,183,.18);
+            border-color: rgba(110,231,183,.5);
+            transform: translateY(-1px);
+            color: #6ee7b7;
+            text-decoration: none;
+        }
+
+    .action-btn--delete {
+        color: #fca5a5;
+        background: rgba(252,165,165,.08);
+        border-color: rgba(252,165,165,.2);
+    }
+
+        .action-btn--delete:hover {
+            background: rgba(252,165,165,.18);
+            border-color: rgba(252,165,165,.5);
+            transform: translateY(-1px);
+            color: #fca5a5;
+            text-decoration: none;
+        }
+
+    /* Card Body — Events Table */
+    .client-card-body {
+        padding: 1.25rem 1.5rem;
+    }
+
+    .events-label {
+        font-family: var(--font-head);
+        font-size: .65rem;
+        font-weight: 600;
+        letter-spacing: .18em;
+        text-transform: uppercase;
+        color: var(--magenta);
+        margin-bottom: .85rem;
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+    }
+
+        .events-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(124,58,237,.18);
+        }
+
+    /* No events */
+    .no-events {
+        font-size: .8rem;
+        color: var(--text-dim);
+        font-style: italic;
+        padding: .5rem 0;
+    }
+
+    /* Events table */
+    .events-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: .82rem;
+    }
+
+        .events-table thead tr {
+            border-bottom: 1px solid rgba(124,58,237,.2);
+        }
+
+        .events-table thead th {
+            font-family: var(--font-head);
+            font-size: .65rem;
+            font-weight: 600;
+            letter-spacing: .15em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            padding: .5rem .75rem;
+            text-align: left;
+        }
+
+        .events-table tbody tr {
+            border-bottom: 1px solid rgba(255,255,255,.04);
+            transition: background .18s;
+        }
+
+            .events-table tbody tr:last-child {
+                border-bottom: none;
+            }
+
+            .events-table tbody tr:hover {
+                background: rgba(124,58,237,.06);
+            }
+
+        .events-table td {
+            padding: .55rem .75rem;
+            color: var(--text-muted);
+            vertical-align: middle;
+        }
+
+    .event-id-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        background: rgba(124,58,237,.15);
+        border: 1px solid rgba(124,58,237,.25);
+        font-family: var(--font-head);
+        font-size: .72rem;
+        font-weight: 700;
+        color: #c4a7ff;
+    }
+
+    .event-name {
+        font-family: var(--font-head);
+        font-weight: 600;
+        color: var(--text-white);
+    }
+
+    /* Marital status badge */
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: .3rem;
+        font-size: .65rem;
+        font-family: var(--font-head);
+        font-weight: 600;
+        border-radius: 50px;
+        padding: .18rem .6rem;
+    }
+
+    .status-badge--married {
+        color: #f9a8d4;
+        background: rgba(233,30,140,.1);
+        border: 1px solid rgba(233,30,140,.25);
+    }
+
+    .status-badge--single {
+        color: #c4a7ff;
+        background: rgba(124,58,237,.1);
+        border: 1px solid rgba(124,58,237,.25);
+    }
+</style>
+
+<div class="container-fluid px-0" style="max-width:1200px;margin:0 auto;">
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="page-header-left">
+            <div class="page-label">Management</div>
+            <h2>Client <span>Directory</span></h2>
+        </div>
+        <a class="btn-add" href="@Url.Action("Create","Clients")">
+            <i class="fa fa-plus"></i>
+            Add New Client
+        </a>
+    </div>
+
+    <!-- Client Cards -->
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-state-icon"><i class="fa fa-users"></i></div>
+            <p>No clients yet. Add your first client to get started.</p>
+        </div>
+    }
+    else
+    {
+        foreach (var clnt in Model)
+        {
+            <div class="client-card">
+
+                <!-- Header -->
+                <div class="client-card-header">
+                    <div class="client-info">
+
+                        <!-- Avatar -->
+                        @if (!string.IsNullOrEmpty(clnt.Picture))
+                        {
+                            <img src="@clnt.Picture" class="client-avatar" alt="@clnt.ClientName" />
+                        }
+                        else
+                        {
+                            <div class="client-avatar-fallback">
+                                @(clnt.ClientName != null && clnt.ClientName.Length > 0 ? clnt.ClientName.Substring(0, 1).ToUpper() : "?")
+                            </div>
+                        }
+
+                        <!-- Meta -->
+                        <div class="client-meta">
+                            <div class="client-name">@clnt.ClientName</div>
+
+                            <span class="meta-pill">
+                                <i class="fa fa-birthday-cake"></i>
+                                @Html.DisplayFor(x => clnt.BirthDate)
+                            </span>
+
+                            <span class="meta-pill">
+                                <i class="fa fa-user"></i>
+                                Age @Html.DisplayFor(x => clnt.Age)
+                            </span>
+
+                            @{
+                                bool isMarried = clnt.MaritalStatus != null &&
+                                    clnt.MaritalStatus.ToString().ToLower().Contains("married");
+                            }
+                            <span class="status-badge @(isMarried ? "status-badge--married" : "status-badge--single")">
+                                <i class="fa @(isMarried ? "fa-heart" : "fa-user-o")"></i>
+                                @Html.DisplayFor(x => clnt.MaritalStatus)
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="client-actions">
+                        <a class="action-btn action-btn--edit"
+                           href="@Url.Action("Edit", "Clients", new { id = clnt.ClientId })">
+                            <i class="fa fa-pencil"></i> Edit
+                        </a>
+                        <a class="action-btn action-btn--delete"
+                           href="@Url.Action("Delete", "Clients", new { id = clnt.ClientId })">
+                            <i class="fa fa-trash"></i> Delete
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Body — Events -->
+                <div class="client-card-body">
+                    <div class="events-label">
+                        <i class="fa fa-calendar" style="color:var(--magenta);"></i>
+                        Booked Events
+                    </div>
+
+                    @if (clnt.EventServices == null || !clnt.EventServices.Any())
+                    {
+                        <div class="no-events">No events booked for this client yet.</div>
+                    }
+                    else
+                    {
+                        <table class="events-table">
+                            <thead>
+                                <tr>
+                                    <th style="width:60px;">ID</th>
+                                    <th>Event Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in clnt.EventServices)
+                                {
+                                    <tr>
+                                        <td>
+                                            <span class="event-id-badge">@item.Event.EventId</span>
+                                        </td>
+                                        <td>
+                                            <span class="event-name">@item.Event.EventName</span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+
+            </div>
+        }
+    }
+
+</div>
