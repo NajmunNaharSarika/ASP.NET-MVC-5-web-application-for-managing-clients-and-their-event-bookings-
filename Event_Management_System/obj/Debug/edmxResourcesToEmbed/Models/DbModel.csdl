@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="eventMangementdbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Client">
+    <Key>
+      <PropertyRef Name="ClientId" />
+    </Key>
+    <Property Name="ClientId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ClientName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="BirthDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="Age" Type="Int32" Nullable="false" />
+    <Property Name="Picture" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="MaritalStatus" Type="Boolean" />
+    <NavigationProperty Name="EventServices" Relationship="Self.FK__EventServ__Clien__4E88ABD4" FromRole="Clients" ToRole="EventServices" />
+  </EntityType>
+  <EntityType Name="Event">
+    <Key>
+      <PropertyRef Name="EventId" />
+    </Key>
+    <Property Name="EventId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="EventName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="EventServices" Relationship="Self.FK__EventServ__Event__4F7CD00D" FromRole="Events" ToRole="EventServices" />
+  </EntityType>
+  <EntityType Name="EventService">
+    <Key>
+      <PropertyRef Name="EventServicesId" />
+    </Key>
+    <Property Name="EventServicesId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ClientId" Type="Int32" Nullable="false" />
+    <Property Name="EventId" Type="Int32" Nullable="false" />
+    <Property Name="ServiceName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="VendorName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Cost" Type="Decimal" Precision="10" Scale="2" />
+    <NavigationProperty Name="Client" Relationship="Self.FK__EventServ__Clien__4E88ABD4" FromRole="EventServices" ToRole="Clients" />
+    <NavigationProperty Name="Event" Relationship="Self.FK__EventServ__Event__4F7CD00D" FromRole="EventServices" ToRole="Events" />
+  </EntityType>
+  <Association Name="FK__EventServ__Clien__4E88ABD4">
+    <End Role="Clients" Type="Self.Client" Multiplicity="1" />
+    <End Role="EventServices" Type="Self.EventService" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Clients">
+        <PropertyRef Name="ClientId" />
+      </Principal>
+      <Dependent Role="EventServices">
+        <PropertyRef Name="ClientId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__EventServ__Event__4F7CD00D">
+    <End Role="Events" Type="Self.Event" Multiplicity="1" />
+    <End Role="EventServices" Type="Self.EventService" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Events">
+        <PropertyRef Name="EventId" />
+      </Principal>
+      <Dependent Role="EventServices">
+        <PropertyRef Name="EventId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="EventMangementDbContex" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Clients" EntityType="Self.Client" />
+    <EntitySet Name="Events" EntityType="Self.Event" />
+    <EntitySet Name="EventServices" EntityType="Self.EventService" />
+    <AssociationSet Name="FK__EventServ__Clien__4E88ABD4" Association="Self.FK__EventServ__Clien__4E88ABD4">
+      <End Role="Clients" EntitySet="Clients" />
+      <End Role="EventServices" EntitySet="EventServices" />
+    </AssociationSet>
+    <AssociationSet Name="FK__EventServ__Event__4F7CD00D" Association="Self.FK__EventServ__Event__4F7CD00D">
+      <End Role="Events" EntitySet="Events" />
+      <End Role="EventServices" EntitySet="EventServices" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

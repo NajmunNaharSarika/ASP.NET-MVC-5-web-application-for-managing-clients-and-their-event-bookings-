@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="eventMangementdbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Clients">
+    <Key>
+      <PropertyRef Name="ClientId" />
+    </Key>
+    <Property Name="ClientId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ClientName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="BirthDate" Type="date" Nullable="false" />
+    <Property Name="Age" Type="int" Nullable="false" />
+    <Property Name="Picture" Type="nvarchar(max)" />
+    <Property Name="MaritalStatus" Type="bit" />
+  </EntityType>
+  <EntityType Name="Events">
+    <Key>
+      <PropertyRef Name="EventId" />
+    </Key>
+    <Property Name="EventId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="EventName" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="EventServices">
+    <Key>
+      <PropertyRef Name="EventServicesId" />
+    </Key>
+    <Property Name="EventServicesId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ClientId" Type="int" Nullable="false" />
+    <Property Name="EventId" Type="int" Nullable="false" />
+    <Property Name="ServiceName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="VendorName" Type="nvarchar" MaxLength="50" />
+    <Property Name="Cost" Type="decimal" Precision="10" Scale="2" />
+  </EntityType>
+  <Association Name="FK__EventServ__Clien__4E88ABD4">
+    <End Role="Clients" Type="Self.Clients" Multiplicity="1" />
+    <End Role="EventServices" Type="Self.EventServices" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Clients">
+        <PropertyRef Name="ClientId" />
+      </Principal>
+      <Dependent Role="EventServices">
+        <PropertyRef Name="ClientId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__EventServ__Event__4F7CD00D">
+    <End Role="Events" Type="Self.Events" Multiplicity="1" />
+    <End Role="EventServices" Type="Self.EventServices" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Events">
+        <PropertyRef Name="EventId" />
+      </Principal>
+      <Dependent Role="EventServices">
+        <PropertyRef Name="EventId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="eventMangementdbModelStoreContainer">
+    <EntitySet Name="Clients" EntityType="Self.Clients" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Events" EntityType="Self.Events" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="EventServices" EntityType="Self.EventServices" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK__EventServ__Clien__4E88ABD4" Association="Self.FK__EventServ__Clien__4E88ABD4">
+      <End Role="Clients" EntitySet="Clients" />
+      <End Role="EventServices" EntitySet="EventServices" />
+    </AssociationSet>
+    <AssociationSet Name="FK__EventServ__Event__4F7CD00D" Association="Self.FK__EventServ__Event__4F7CD00D">
+      <End Role="Events" EntitySet="Events" />
+      <End Role="EventServices" EntitySet="EventServices" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
